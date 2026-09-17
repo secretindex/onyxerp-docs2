@@ -1,3 +1,6 @@
+"use client";
+
+
 import { Button } from "@/components/ui/button";
 
 import {
@@ -24,11 +27,19 @@ export default function LoginForm() {
         <Form className="flex w-full flex-col gap-4">
           <Field>
             <FieldLabel>E-mail</FieldLabel>
-            <Input placeholder="your.email@example.com" type="email" />
+            <Input
+              placeholder="your.email@example.com"
+              size="lg"
+              type="email"
+            />
           </Field>
           <Field>
             <FieldLabel>Password</FieldLabel>
-            <Input placeholder="••••••••" type="password" />
+            <Input
+              placeholder="••••••••"
+              size="lg"
+              type="password"
+            />
           </Field>
           <Button className="w-full" type="submit">
             Login
