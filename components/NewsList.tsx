@@ -1,12 +1,13 @@
 "use client";
 
 import NewsItem from "./NewsItem";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 
 const NewsList = () => {
   const supabase = createClient();
+  const [news, setNews] = useState<Array<any>>([]);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -14,6 +15,8 @@ const NewsList = () => {
       if (error) {
         console.error("Erro ao buscar notícias:", error);
       }
+
+      setNews(data as Array<any>);
     };
     fetchNews();
   }, []);
@@ -25,12 +28,21 @@ const NewsList = () => {
         Fique por dentro das últimas atualizações do sistema OnyxERP.
       </p>
       <div className="mt-4 w-full">
-        <NewsItem
-          id="21901dj120jd120j"
-          title="Atualização 1"
-          description="Descrição da atualização 1"
-          date="30/08/2026"
-        />
+        {news && (
+          <>
+            {news.map((val) => {
+              return (
+                <NewsItem
+                  key={val.id}
+                  id={val.id}
+                  title={val.title}
+                  description={val.excerpt}
+                  date={new Date(val.published_at).toLocaleDateString()}
+                ></NewsItem>
+              );
+            })}
+          </>
+        )}
       </div>
     </section>
   );

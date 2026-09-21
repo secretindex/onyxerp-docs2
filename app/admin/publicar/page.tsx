@@ -1,29 +1,65 @@
 "use client";
 
-import NewsItem from "@/components/NewsItem";
-import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
 import { Form } from "@/components/ui/form";
+import NewsItem from "@/components/NewsItem";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toastManager } from "@/components/ui/toast";
+import { Field, FieldLabel } from "@/components/ui/field";
+
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const PublicarPage = () => {
-  const handleAddSgmClient = () => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [news, setNews] = useState<Array<any>>([]);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     axios
-      .post("/api/publish", {
-      })
+      .post("/api/publish", { title, description })
       .then(() => {
-        refresh();
+        toastManager.add({
+          title: "Publicação enviada com sucesso!",
+          description: "Sua publicação foi enviada para revisão.",
+          type: "success",
+        });
+        setTitle("");
+        setDescription("");
       })
-      .catch((err) => toast.error("Erro ao adicionar cliente de SGM", err));
+      .catch((error) => {
+        toastManager.add({
+          title: "Erro ao enviar publicação",
+          description:
+            "Ocorreu um erro ao enviar sua publicação. Tente novamente. " +
+            error.message,
+          type: "error",
+        });
+      });
   };
-  const handleSubmit = async (data: FormData) => {
-    const title = data.get("title") as string;
-    const description = data.get("description") as string;
-    console.log("Título:", title);
-    console.log("Descrição:", description);
-  };
+
+  useEffect(() => {
+    axios
+      .get("/api/news")
+      .then((res) => {
+        if (!res.data) {
+          throw new Error(
+            "Erro: Não foi encontrado nenhuma notícia no banco de dados.",
+          );
+        }
+        setNews(res.data);
+      })
+      .then((err) => {
+        toastManager.add({
+          title: "Não encontrado",
+          description: "Não foi encontrado nenhuma notícia. " + err,
+          type: "error",
+        });
+      });
+  }, []);
 
   return (
     <div className="flex flex-col h-full w-full items-center justify-center gap-12">
@@ -34,28 +70,48 @@ const PublicarPage = () => {
         </p>
       </div>
       <div className="flex flex-col gap-2 w-2/3 m-auto">
-        <Form className="flex w-full flex-col gap-4">
+        <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
           <Field>
             <FieldLabel>Título</FieldLabel>
-            <Input placeholder="Atualizações..." size="lg" type="text" />
+            <Input
+              name="title"
+              placeholder="Atualizações..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              size="lg"
+              type="text"
+            />
           </Field>
           <Field>
             <FieldLabel>Descrição</FieldLabel>
-            <Textarea placeholder="Descreva sua publicação em Markdown..." />
+            <Textarea
+              name="description"
+              placeholder="Descreva sua publicação em Markdown..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </Field>
-          <Button onClick={handleSubmit} className="w-full" type="submit">
+          <Button className="w-full" type="submit">
             Publicar
           </Button>
         </Form>
       </div>
       <div className="flex flex-col gap-2 w-2/3 m-auto">
         <h2 className="text-xl font-bold">Publicações recentes</h2>
-        <NewsItem
-          id="21901dj120jd120j"
-          title="Atualização 1"
-          description="Descrição da atualização 1"
-          date="30/08/2026"
-        />
+        {news && (
+          <>
+            {news.map((val) => {
+              return (
+                <NewsItem
+                  id={val.id}
+                  title={val.title}
+                  description={val.excerpt}
+                  date={new Date(val.published_at).toLocaleDateString()}
+                ></NewsItem>
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );
