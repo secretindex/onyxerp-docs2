@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toastManager } from "@/components/ui/toast";
 import { Field, FieldLabel } from "@/components/ui/field";
 
+import MDEditor from "@uiw/react-md-editor"
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -15,6 +17,7 @@ const PublicarPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [news, setNews] = useState<Array<any>>([]);
+  const [content, setContent] = useState<string>("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,14 +85,11 @@ const PublicarPage = () => {
               type="text"
             />
           </Field>
-          <Field>
-            <FieldLabel>Descrição</FieldLabel>
-            <Textarea
-              name="description"
-              placeholder="Descreva sua publicação em Markdown..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+          <Field className="w-full">
+            <FieldLabel>
+              Descrição
+            </FieldLabel>
+            <MDEditor value={description} onChange={(value) => setDescription(value || "")} height={400} className="w-full" />
           </Field>
           <Button className="w-full" type="submit">
             Publicar
@@ -100,13 +100,13 @@ const PublicarPage = () => {
         <h2 className="text-xl font-bold">Publicações recentes</h2>
         {news && (
           <>
-            {news.map((val) => {
+            {news.sort((a, b) => (new Date(b.published_at) as any) - (new Date(a.published_at) as any)).map((val) => {
               return (
                 <NewsItem
                   id={val.id}
                   title={val.title}
                   description={val.excerpt}
-                  date={new Date(val.published_at).toLocaleDateString()}
+                  date={new Date(val.published_at).toLocaleDateString("pt-BR")}
                 ></NewsItem>
               );
             })}

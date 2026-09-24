@@ -52,15 +52,16 @@ const NewsletterPage = () => {
 
   return (
     <div className="h-full w-full p-4">
-      <h1 className="w-full text-2xl font-bold mb-4">{newsletter?.title}</h1>
+      <div className="flex flex-col gap-2 items-center">
+        <h1 className="w-full text-4xl text-center font-bold">{newsletter?.title}</h1>
+        <span className="text-gray-600 text-sm">{`Publicado na ${newsletter && new Date(newsletter.published_at).toLocaleDateString("pt-BR", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`}</span>
+      </div>
+      <hr className="my-4" />
       <main className="w-full gap-3">
         <article className="w-full">
-          <p className="text-muted-foreground">
-            {newsletter && (
-              <>Dia {new Date(newsletter?.published_at).toLocaleDateString()}</>
-            )}
-          </p>
-          <Markdown remarkPlugins={[remarkGfm]}>{newsletter?.content}</Markdown>
+          <div className="prose prose-md max-w-none">
+            <Markdown remarkPlugins={[remarkGfm]}>{newsletter?.content}</Markdown>
+          </div>
         </article>
       </main>
     </div>

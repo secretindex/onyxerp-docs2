@@ -30,7 +30,7 @@ const NewsList = () => {
       <div className="mt-4 w-full">
         {news && (
           <>
-            {news.map((val) => {
+            {news.sort((a: any, b: any) => (new Date(b.published_at) as any) - (new Date(a.published_at) as any)).map((val) => {
               return (
                 <NewsItem
                   key={val.id}
