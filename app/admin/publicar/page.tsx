@@ -11,13 +11,12 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import MDEditor from "@uiw/react-md-editor"
 
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import NewsList from "@/components/NewsList";
 
 const PublicarPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [news, setNews] = useState<Array<any>>([]);
-  const [content, setContent] = useState<string>("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,26 +42,6 @@ const PublicarPage = () => {
         });
       });
   };
-
-  useEffect(() => {
-    axios
-      .get("/api/news")
-      .then((res) => {
-        if (!res.data) {
-          throw new Error(
-            "Erro: Não foi encontrado nenhuma notícia no banco de dados.",
-          );
-        }
-        setNews(res.data);
-      })
-      .then((err) => {
-        toastManager.add({
-          title: "Não encontrado",
-          description: "Não foi encontrado nenhuma notícia. " + err,
-          type: "error",
-        });
-      });
-  }, []);
 
   return (
     <div className="flex flex-col h-full w-full items-center justify-center gap-12">
@@ -97,21 +76,7 @@ const PublicarPage = () => {
         </Form>
       </div>
       <div className="flex flex-col gap-2 w-2/3 m-auto">
-        <h2 className="text-xl font-bold">Publicações recentes</h2>
-        {news && (
-          <>
-            {news.sort((a, b) => (new Date(b.published_at) as any) - (new Date(a.published_at) as any)).map((val) => {
-              return (
-                <NewsItem
-                  id={val.id}
-                  title={val.title}
-                  description={val.excerpt}
-                  date={new Date(val.published_at).toLocaleDateString("pt-BR")}
-                ></NewsItem>
-              );
-            })}
-          </>
-        )}
+        <NewsList admin={true} />
       </div>
     </div>
   );

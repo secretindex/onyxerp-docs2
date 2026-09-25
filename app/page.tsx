@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -10,10 +11,13 @@ import {
   FrameTitle,
 } from "@/components/ui/frame";
 
-import NewsItem from "@/components/NewsItem";
 import NewsList from "@/components/NewsList";
 
 export default function Home() {
+  const handleSubmit = () => {
+
+  }
+
   return (
     <>
       <section className="flex flex-col items-center sm:items-start">
@@ -51,7 +55,7 @@ export default function Home() {
                     placeholder="Digite seu e-mail"
                   />
                 </div>
-                <Button type="submit">Inscrever-se</Button>
+                <Button onClick={handleSubmit}>Inscrever-se</Button>
               </div>
             </Form>
           </FrameDescription>

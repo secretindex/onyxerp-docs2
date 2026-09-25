@@ -1,35 +1,49 @@
-import nodemailer from "nodemailer";
+import { createClient } from "@/utils/supabase/server";
 import Mailjet from "node-mailjet"
+import { cookies } from "next/headers";
 
 const mailjet = new Mailjet({
-  apiKey: "",
-  apiSecret: "",
+  apiKey: process.env.MAILJET_API_KEY,
+  apiSecret: process.env.MAILJET_API_SECRET,
 })
 
-export async function POST() {
-  const account = await nodemailer.createTestAccount();
+export async function POST(req: Request) {
+  const supabase = createClient(await cookies())
+  try {
+    const body = await req.json();
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-    auth: {
-      user: account.user,
-      pass: account.pass,
-    },
-  });
+    console.log(body)
 
-  const info = await transporter.sendMail({
-    from: '"Meu App" <teste@meuapp.com>',
-    to: "qualquer@email.com",
-    subject: "Teste local",
-    text: "Olá! Este é um teste.",
-    html: "<h1>Olá! 👋</h1><p>Este é um teste.</p>",
-  });
+    const { data, error: errorDatabase } = await supabase.from("updates").select("*").eq("id", body.id)
 
-  console.log("Preview:", nodemailer.getTestMessageUrl(info));
+    if (errorDatabase) throw new Error(errorDatabase.message)
 
-  return Response.json({
-    preview: nodemailer.getTestMessageUrl(info),
-  });
+    console.log(data)
+
+    return Response.json({ success: true, data: "Oi" })
+  } catch (error) {
+    console.log(error)
+    return Response.json({ errorMessage: error, status: 500 })
+  }
 }
+
+/* 
+  const result = await mailjet.post("send", { version: "v3.1" }).request({
+      Messages: [
+        {
+          From: {
+            Email: "websites@braconsultoria.com.br",
+            Name: "Atualizações OnyxERP"
+          },
+          To: [
+            {
+              Email: "caio@braconsultoria.com.br",
+            }
+          ],
+          Subject: "Your email flight plan!",
+          TextPart: "Dear passenger 1, welcome to Mailjet! May the delivery force be with you!",
+          HTMLPart: "<h3>Dear passenger 1, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!</h3><br />May the delivery force be with you!"
+        }
+      ]
+    })
+*/

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 import { createClient } from "@/utils/supabase/client";
 
-const NewsList = () => {
+const NewsList = ({ admin }: { admin: boolean }) => {
   const supabase = createClient();
   const [news, setNews] = useState<Array<any>>([]);
 
@@ -37,7 +37,8 @@ const NewsList = () => {
                   id={val.id}
                   title={val.title}
                   description={val.excerpt}
-                  date={new Date(val.published_at).toLocaleDateString()}
+                  date={new Date(val.published_at).toLocaleDateString("pt-BR")}
+                  admin={admin}
                 ></NewsItem>
               );
             })}
