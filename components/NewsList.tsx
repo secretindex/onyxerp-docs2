@@ -23,10 +23,12 @@ const NewsList = ({ admin }: { admin: boolean }) => {
 
   return (
     <section className="flex flex-col items-center sm:items-start mb-12 w-full">
-      <h2 className="text-xl font-bold">Últimas Atualizações</h2>
-      <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
-        Fique por dentro das últimas atualizações do sistema OnyxERP.
-      </p>
+      <div className="flex flex-col gap-2">
+        <h2 className="text-xl font-bold">Últimas Atualizações</h2>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          Fique por dentro das últimas atualizações do sistema OnyxERP.
+        </p>
+      </div>
       <div className="mt-4 w-full">
         {news && (
           <>

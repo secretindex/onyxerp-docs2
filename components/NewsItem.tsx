@@ -37,18 +37,18 @@ const NewsItem = ({
   return (
     <div
       key={id}
-      className="flex flex-col gap-2 border-x-0 p-4 border rounded-sm bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all ease-in-out"
+      className="flex flex-col gap-2 border-x-0 px-2 py-4 border w-full rounded-sm bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all ease-in-out"
     >
       <div>
-        <h3 className="text-xl font-bold">{title}</h3>
+        <h3 className="text-lg font-bold">{title}</h3>
       </div>
       <div className="flex flex-col gap-2">
-        <div className="flex w-full items-center gap-2">
-          <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="flex w-full items-center justify-between gap-2">
+          <div className="flex flex-col gap-1">
+            <span className="text-[0.9rem] text-zinc-600 dark:text-zinc-400">
               {description}
-            </p>
-            <Link className="text-blue-600 text-sm" href={`/newsletter/${id}`}>Ler mais...</Link>
+            </span>
+            <Link className="text-blue-600 hover:text-blue-400 transition-all ease-in-out text-[0.8rem]" href={`/newsletter/${id}`}>Ler mais...</Link>
           </div>
           <div>
             {
@@ -78,7 +78,7 @@ const NewsItem = ({
             }
           </div>
         </div>
-        <Badge variant="secondary" className="w-fit">
+        <Badge variant="secondary" className="w-fit p-2">
           {date}
         </Badge>
       </div>

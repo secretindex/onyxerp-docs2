@@ -1,10 +1,8 @@
 "use client";
 
 import { Form } from "@/components/ui/form";
-import NewsItem from "@/components/NewsItem";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { toastManager } from "@/components/ui/toast";
 import { Field, FieldLabel } from "@/components/ui/field";
 
@@ -45,13 +43,13 @@ const PublicarPage = () => {
 
   return (
     <div className="flex flex-col h-full w-full items-center justify-center gap-12">
-      <div className="flex flex-col gap-2 w-2/3 m-auto">
+      <div className="flex flex-col gap-2 w-3/4 m-auto">
         <h1 className="text-2xl font-bold">Publicações</h1>
         <p className="text-muted-foreground">
           Crie e publique suas notícias para o OnyxDocs.
         </p>
       </div>
-      <div className="flex flex-col gap-2 w-2/3 m-auto">
+      <div className="flex flex-col gap-2 w-3/4 m-auto">
         <Form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
           <Field>
             <FieldLabel>Título</FieldLabel>
@@ -75,7 +73,7 @@ const PublicarPage = () => {
           </Button>
         </Form>
       </div>
-      <div className="flex flex-col gap-2 w-2/3 m-auto">
+      <div className="flex flex-col gap-2 w-3/4 m-auto">
         <NewsList admin={true} />
       </div>
     </div>
